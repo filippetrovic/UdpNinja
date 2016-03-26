@@ -5,7 +5,9 @@ using namespace udpninja;
 
 int main(int argc, char **argv) {
 	
-	Receiver * r = new Receiver();
+	unsigned int port = atoi(argv[1]);
+
+	Receiver * r = new Receiver(port);
 	r->doJob();
 
 }

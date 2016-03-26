@@ -1,46 +1,41 @@
 #include "Receiver.h"
+#include "RawSocket.h"
 #include <iostream>
-#include <cstring>
-extern "C"
-{
-#include <sys/socket.h>
+
 #include <netinet/ip.h>
-#include <netinet/if_ether.h>
+#include <arpa/inet.h>
+
+using namespace udpninja;
+
+Receiver::Receiver(unsigned int port) {
+	this->port = port;
+	this->inSocket = new RawSocket(port);
 }
 
-udpninja::Receiver::Receiver() {
-	std::cout << "Constructor\n";
+Receiver::~Receiver() {
+	delete this->inSocket;
 }
 
-udpninja::Receiver::~Receiver() {
-}
+void Receiver::doJob() {
 
-void udpninja::Receiver::doJob() {
-         
-    unsigned char buffer[65536];
-     
-//    int sock_raw = socket(AF_PACKET , SOCK_RAW , htons(ETH_P_IP));
-    int sock_raw = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
-    
-	int one = 1;
-	const int *val = &one;
-	setsockopt (sock_raw, IPPROTO_IP, IP_HDRINCL, val, sizeof (one));
-	setsockopt(sock_raw , SOL_SOCKET , SO_BINDTODEVICE , "eth1" , strlen("eth1")+ 1 );
-	
-    if (sock_raw < 0)
-    {
-        std::cout << "Socket Error";
-        return;
-    }
-    while(1)
-    {
-        //Receive a packet
-        int data_size = recv(sock_raw , buffer , 65536 , 0);
-        if (data_size < 0) {
-            std::cout << "Recvfrom error , failed to get packets\n";
-            return;
-        } else {
-			std::cout << "packet received\n" << std::flush;
+	if (inSocket->open() < 0) {
+		std::cout << "Socket Error: Cannot open socket.";
+		return;
+	}
+
+
+	while(1) {
+		//Receive a packet
+		IpPacket * packet = inSocket->read();
+		if (packet->len < 0) {
+			std::cout << "Socket Error: Failed to read from socket.\n";
+			return;
+		} else {
+			iphdr * ipHeader = (iphdr *) packet->data;
+			
+			// TODO: write to file instead of console logging.
+			std::cout << inet_ntoa(*(struct in_addr*) &ipHeader->saddr);
+			std::cout << " " << ntohs(ipHeader->tot_len) << "\n" << std::flush;
 		}
-    }
+	}
 }

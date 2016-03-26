@@ -1,15 +1,18 @@
 #pragma once
+#include "RawSocket.h"
 
 namespace udpninja
 {
 
-class Receiver
-{
+class Receiver {
 public:
-	Receiver();
+	Receiver(unsigned int port);
 	~Receiver();
 	
 	void doJob();
+private:
+	unsigned int port;
+	RawSocket * inSocket;
 };
 
 }
