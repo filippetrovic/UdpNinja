@@ -11,7 +11,6 @@ public:
 	
 	void doJob();
 private:
-	unsigned int port;
 	RawSocket * inSocket;
 };
 

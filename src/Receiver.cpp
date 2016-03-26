@@ -7,13 +7,12 @@
 
 using namespace udpninja;
 
-Receiver::Receiver(unsigned int port) {
-	this->port = port;
-	this->inSocket = new RawSocket(port);
+Receiver::Receiver(unsigned int port) {	
+	inSocket = new RawSocket(port);
 }
 
 Receiver::~Receiver() {
-	delete this->inSocket;
+	delete inSocket;
 }
 
 void Receiver::doJob() {
