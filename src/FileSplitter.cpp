@@ -75,6 +75,7 @@ void FileSplitter::updateStartTime() {
 	time(&startTime);
 	tm * timeInfo = localtime(&startTime);
 	timeInfo->tm_min = (timeInfo->tm_min / 5) * 5; //	round to 5 min
+	timeInfo->tm_sec = 0;	//	round to 5 min
 	startTime = mktime(timeInfo);
 }
 char* udpninja::FileSplitter::getOutputDir() {
