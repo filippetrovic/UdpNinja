@@ -1,5 +1,6 @@
 #include "Receiver.h"
 #include "RawSocket.h"
+#include "FileSplitter.h"
 #include <iostream>
 
 #include <netinet/ip.h>
@@ -18,10 +19,16 @@ Receiver::~Receiver() {
 void Receiver::doJob() {
 
 	if (inSocket->open() < 0) {
-		std::cout << "Socket Error: Cannot open socket.";
+		std::cout << "Socket Error: Cannot open socket. Be sure you have root privileges\n";
 		return;
 	}
 
+	FileSplitter * outputFile = new FileSplitter();
+	
+	if (!outputFile->isOpen()) {
+		std::cout << "File Error: Failed to open file. Be sure you have root privileges\n";
+		return;
+	}
 
 	while(1) {
 		//Receive a packet
@@ -32,9 +39,12 @@ void Receiver::doJob() {
 		} else {
 			iphdr * ipHeader = (iphdr *) packet->data;
 			
-			// TODO: write to file instead of console logging.
-			std::cout << inet_ntoa(*(struct in_addr*) &ipHeader->saddr);
-			std::cout << " " << ntohs(ipHeader->tot_len) << "\n" << std::flush;
+			outputFile->write(&(packet->len), sizeof(packet->len));
+			outputFile->write(packet->data, packet->len);
+			outputFile->checkForNewFile();
+//			TODO: add verbose parameter and log to console.
+//			std::cout << inet_ntoa(*(struct in_addr*) &ipHeader->saddr);
+//			std::cout << " " << ntohs(ipHeader->tot_len) << "\n" << std::flush;
 		}
 	}
 }
