@@ -1,14 +1,16 @@
 #include "File.h"
 #include <cstring>
 
+#include <iostream>
+
 using namespace udpninja;
 
 File::File(char * fileName, const char * options) {
 	this->fileName = new char [strlen(fileName) + 1];
-	this->fileName = strcpy(this->fileName, fileName);
+	strcpy(this->fileName, fileName);
 
 	this->options = new char [strlen(options) + 1];
-	this->options = strcpy(this->options, options);
+	strcpy(this->options, options);
 	file = fopen(fileName, options);
 }
 
@@ -40,6 +42,8 @@ int File::isEmpty() {
 }
 
 int File::renameFile(char * newName, int openAgain) {
+	std::cout << newName << "\n";
+	std::cout << strlen(newName) << "\n";
 	close();
 	if (rename(fileName, newName) != 0) {
 		return -1;

@@ -1,14 +1,20 @@
-#include <cstdlib>
-#include <iostream>
-#include "Receiver.h"
+#include "Job.h"
+#include "JobBuilder.h"
+
 using namespace udpninja;
 
+
 int main(int argc, char **argv) {
+
+	JobBuilder * builder = new JobBuilder(argc, argv);
 	
-	unsigned int port = atoi(argv[1]);
+	Job * job = builder->getJob();
 
-	Receiver * r = new Receiver(port);
-	r->doJob();
-	delete r;
-
+	delete builder;
+	
+	job->sayHello();
+	job->doJob();
+	
+	delete job;
+	
 }

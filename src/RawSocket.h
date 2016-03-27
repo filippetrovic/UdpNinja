@@ -17,6 +17,7 @@ public:
 	~RawSocket();
 	int open();
 	IpPacket * read();
+	unsigned int getPort();
 
 private:
 	int socketHandle;

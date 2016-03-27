@@ -6,13 +6,12 @@
 
 using namespace udpninja;
 
-Receiver::Receiver(unsigned int port) {	
+Receiver::Receiver(unsigned int port, char * dir) {
 	inSocket = new RawSocket(port);
-	outputFile = new FileSplitter();
+	outputFile = new FileSplitter(dir);
 }
 
 Receiver::~Receiver() {
-	
 	delete inSocket;
 	outputFile->close();
 	delete outputFile;
@@ -51,4 +50,10 @@ void Receiver::doJob() {
 //			std::cout << " " << ntohs(ipHeader->tot_len) << "\n" << std::flush;
 		}
 	}
+}
+
+void Receiver::sayHello() {
+	std::cout << "UdpNinja started in record mode. "; 
+	std::cout << "Listening on port " << inSocket->getPort() << ". "; 
+	std::cout << "Output dir is \"" << outputFile->getOutputDir() << "\".\n";
 }

@@ -76,3 +76,6 @@ IpPacket * udpninja::RawSocket::read() {
 	}
 }
 
+unsigned int udpninja::RawSocket::getPort() {
+	return port;
+}
