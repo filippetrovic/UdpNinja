@@ -42,8 +42,6 @@ int File::isEmpty() {
 }
 
 int File::renameFile(char * newName, int openAgain) {
-	std::cout << newName << "\n";
-	std::cout << strlen(newName) << "\n";
 	close();
 	if (rename(fileName, newName) != 0) {
 		return -1;
