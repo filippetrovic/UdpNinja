@@ -1,5 +1,6 @@
 #pragma once
 #include "RawSocket.h"
+#include "FileSplitter.h"
 
 namespace udpninja
 {
@@ -12,6 +13,7 @@ public:
 	void doJob();
 private:
 	RawSocket * inSocket;
+	FileSplitter * outputFile;
 };
 
 }

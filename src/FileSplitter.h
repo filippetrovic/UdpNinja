@@ -23,7 +23,7 @@ private:
 	void updateStartTime();
 	void createNewFile(time_t timestamp);
 
-	File * tmp;
+	File * tmpFile;
 	time_t startTime;
 };
 

@@ -1,6 +1,4 @@
 #include "Receiver.h"
-#include "RawSocket.h"
-#include "FileSplitter.h"
 #include <iostream>
 
 #include <netinet/ip.h>
@@ -10,10 +8,14 @@ using namespace udpninja;
 
 Receiver::Receiver(unsigned int port) {	
 	inSocket = new RawSocket(port);
+	outputFile = new FileSplitter();
 }
 
 Receiver::~Receiver() {
+	
 	delete inSocket;
+	outputFile->close();
+	delete outputFile;
 }
 
 void Receiver::doJob() {
@@ -22,8 +24,6 @@ void Receiver::doJob() {
 		std::cout << "Socket Error: Cannot open socket. Be sure you have root privileges\n";	
 		return;
 	}
-
-	FileSplitter * outputFile = new FileSplitter();
 	
 	if (!outputFile->isOpen()) {
 		std::cout << "File Error: Failed to open file. Be sure you have root privileges\n";

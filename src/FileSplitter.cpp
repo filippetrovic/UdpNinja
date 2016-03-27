@@ -3,23 +3,24 @@
 using namespace udpninja;
 
 FileSplitter::FileSplitter() {
-	tmp = new File( (char *)TMP_FILENAME, FILE_MODE);
+	tmpFile = new File( (char *)TMP_FILENAME, FILE_MODE);
 	startTime = 0;
 }
 
 FileSplitter::~FileSplitter() {
+	delete tmpFile;
 }
 
 int FileSplitter::close() {
-	return tmp->close();
+	return tmpFile->close();
 }
 
 int FileSplitter::isOpen() {
-	return tmp->isOpen();
+	return tmpFile->isOpen();
 }
 
 int FileSplitter::write(const void * data, size_t size){
-	return tmp->write(data, size);
+	return tmpFile->write(data, size);
 }
 
 void FileSplitter::checkForNewFile() {
@@ -35,7 +36,7 @@ void FileSplitter::checkForNewFile() {
 }
 
 void FileSplitter::createNewFile(time_t timestamp) {
-	if (tmp->isEmpty()) {
+	if (tmpFile->isEmpty()) {
 		return;	//	no need for empty file
 	}
 	
@@ -47,11 +48,11 @@ void FileSplitter::createNewFile(time_t timestamp) {
 	char * fileName = new char[fileNameLen];
 	
 	strftime(fileName, fileNameLen, "udp_%Y_%m_%d_%H_%M.ninja", timeInfo);
-	tmp->renameFile(fileName, 0);
+	tmpFile->renameFile(fileName, 0);
 	
-	delete tmp;
+	delete tmpFile;
 	
-	tmp = new File((char *)TMP_FILENAME, FILE_MODE);
+	tmpFile = new File((char *)TMP_FILENAME, FILE_MODE);
 }
 
 void FileSplitter::updateStartTime() {
