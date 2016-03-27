@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <netinet/udp.h>
 #include <netinet/ip.h>
+#include <errno.h>
 
 using namespace udpninja;
 
@@ -38,6 +39,14 @@ int RawSocket::open() {
 		return -1;
 	}
 	
+	timeval tv;
+	tv.tv_sec = 20;	// socket timeout in seconds
+	tv.tv_usec = 0;
+
+	if (setsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(timeval)) < 0) {
+		return -1;
+	}
+
 //	TODO: should we bind socket to device?
 //	if (setsockopt(socketHandle , SOL_SOCKET , SO_BINDTODEVICE , "eth1" , strlen("eth1") + 1 ) < 0) {
 //		return -1;
@@ -48,10 +57,16 @@ int RawSocket::open() {
 
 IpPacket * udpninja::RawSocket::read() {
 	while (1) {	//	wait for packet on defined port.
+		errno = 0;
 		packet->len = recv(socketHandle , packet->data , 65536 , 0);
-			
-		if (packet->len < 0) {
-			return packet;	//	error handling.
+		
+		if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {	//	timeout
+			packet->len = 0;
+			return packet;
+		}
+
+		if (packet->len < 0) {	//	error handling
+			return packet;
 		}
 
 		udphdr * udpHeader = (udphdr *) (packet->data + sizeof(iphdr));	//	udp header is just after ip header.
