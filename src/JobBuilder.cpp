@@ -25,18 +25,18 @@ Job* JobBuilder::getJob() {
 }
 
 Job* JobBuilder::createReceiver() {
-	unsigned int port;
-	char * dir = (char *) "/tmp";
+	Receiver * receiver = new Receiver();
 	
 	for (int i = 2 ; i < argc ; ++i) {
 		if (strcmp(argv[i], "-p") == 0) {
-			port = atoi(argv[++i]);
+			receiver->setPort(atoi(argv[++i]));
 		} else if (strcmp(argv[i], "-o") == 0) {
-			dir = argv[++i];
+			receiver->setDir(argv[++i]);
 		} else {
+			delete receiver;
 			return new HelpJob();
 		}
 	}
 	
-	return new Receiver(port, dir);
+	return receiver;
 }

@@ -24,7 +24,8 @@ void HelpJob::sayHello() {
 	std::cout << "-record \t Record UDP packets to file.\n";
 	std::cout << SMALL_TAB << "options:\n";
 	std::cout << SMALL_TAB << SMALL_TAB;
-	std::cout <<  "-p <port> \t Set UDP port on which to listen for incoming packets.\n";
+	std::cout <<  "-p <port> \t Set UDP port on which to listen for\n";
+	std::cout << SMALL_TAB << SMALL_TAB << "\t\t " << "incoming packets. (default 2055)\n";
 	std::cout << SMALL_TAB << SMALL_TAB;
 	std::cout << "-o <dir> \t Set dir in which to store files. (default /tmp)\n";
 }

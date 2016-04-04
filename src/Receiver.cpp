@@ -1,17 +1,19 @@
 #include "Receiver.h"
 #include <iostream>
-
+#include <cstring>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 
 using namespace udpninja;
 
-Receiver::Receiver(unsigned int port, char * dir) {
-	inSocket = new RawSocket(port);
-	outputFile = new FileSplitter(dir);
+Receiver::Receiver() {
+	port = 2055;
+	dir = new char[strlen(DEFAULT_OUTPUT_DIR) + 1];
+	strcpy(dir, DEFAULT_OUTPUT_DIR);
 }
 
 Receiver::~Receiver() {
+	delete dir;
 	delete inSocket;
 	outputFile->close();
 	delete outputFile;
@@ -19,14 +21,8 @@ Receiver::~Receiver() {
 
 void Receiver::doJob() {
 
-	if (inSocket->open() < 0) {
-		std::cout << "Socket Error: Cannot open socket. Be sure you have root privileges\n";	
-		return;
-	}
-	
-	if (!outputFile->isOpen()) {
-		std::cout << "File Error: Failed to open file. Be sure you have root privileges\n";
-		return;
+	if (prepare() == -1) {
+		return;	// error
 	}
 
 	while(1) {
@@ -52,8 +48,44 @@ void Receiver::doJob() {
 	}
 }
 
+int Receiver::prepare() {
+	
+	inSocket = new RawSocket(port);
+
+	if (inSocket->open() < 0) {
+		std::cout << "Socket Error: Cannot open socket. Be sure you have root privileges\n";
+		return -1;
+	}
+	
+
+	outputFile = new FileSplitter(dir);
+
+	if (!outputFile->isOpen()) {
+		std::cout << "File Error: Failed to open file. Be sure you have root privileges\n";
+		return -1;
+	}
+	
+	return 0;
+}
+
 void Receiver::sayHello() {
 	std::cout << "UdpNinja started in record mode. "; 
-	std::cout << "Listening on port " << inSocket->getPort() << ". "; 
-	std::cout << "Output dir is \"" << outputFile->getOutputDir() << "\".\n";
+	std::cout << "Listening on port " << port << ". "; 
+	std::cout << "Output dir is \"" << dir << "\".\n";
+}
+
+void Receiver::setDir(char* dir) {
+	this->dir = dir;
+}
+
+char* Receiver::getDir() {
+	return dir;
+}
+
+void Receiver::setPort(unsigned int port) {
+	this->port = port;
+}
+
+unsigned int Receiver::getPort() {
+	return port;
 }
