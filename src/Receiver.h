@@ -4,7 +4,7 @@
 #include "Job.h"
 
 #define DEFAULT_OUTPUT_DIR "/tmp"
-
+#define DEFAULT_PORT 514
 namespace udpninja
 {
 

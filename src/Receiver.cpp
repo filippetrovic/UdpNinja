@@ -7,7 +7,7 @@
 using namespace udpninja;
 
 Receiver::Receiver() {
-	port = 2055;
+	port = DEFAULT_PORT;
 	dir = new char[strlen(DEFAULT_OUTPUT_DIR) + 1];
 	strcpy(dir, DEFAULT_OUTPUT_DIR);
 }
