@@ -1,8 +1,10 @@
 #include "JobBuilder.h"
 #include "Receiver.h"
+#include "ReplaySender.h"
 #include "HelpJob.h"
 #include <cstdlib>
 #include <cstring>
+
 
 using namespace udpninja;
 
@@ -19,6 +21,8 @@ Job* JobBuilder::getJob() {
 
 	if (strcmp(mode, "-record") == 0) {
 		return createReceiver();
+	} else if (strcmp(mode, "-replay") == 0) {
+		return createReplayJob();
 	}
 	
 	return new HelpJob();
@@ -39,4 +43,10 @@ Job* JobBuilder::createReceiver() {
 	}
 	
 	return receiver;
+}
+
+Job* JobBuilder::createReplayJob() {
+	ReplaySender * replaySender = new ReplaySender();
+	
+	return replaySender;
 }

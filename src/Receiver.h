@@ -1,5 +1,6 @@
 #pragma once
 #include "RawSocket.h"
+#include "IpPacket.h"
 #include "FileSplitter.h"
 #include "Job.h"
 

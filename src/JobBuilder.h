@@ -13,7 +13,8 @@ public:
 	Job* getJob();
 private:
 	Job* createReceiver();
-
+	Job* createReplayJob();
+	
 	int argc;
 	char ** argv;
 	Job * job;

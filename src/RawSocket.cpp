@@ -1,6 +1,5 @@
 #include "RawSocket.h"
 #include <sys/socket.h>
-#include <netinet/ip.h>
 #include <cstring>
 #include <unistd.h>
 #include <netinet/udp.h>
@@ -8,14 +7,6 @@
 #include <errno.h>
 
 using namespace udpninja;
-
-IpPacket::IpPacket() {
-	data = new unsigned char [65536];
-}
-
-IpPacket::~IpPacket() {
-	delete data;
-}
 
 RawSocket::RawSocket(unsigned int port){
 	this->port = port;
@@ -55,7 +46,7 @@ int RawSocket::open() {
 	return 0;
 }
 
-IpPacket * udpninja::RawSocket::read() {
+IpPacket * RawSocket::read() {
 	while (1) {	//	wait for packet on defined port.
 		errno = 0;
 		packet->len = recv(socketHandle , packet->data , 65536 , 0);
@@ -76,6 +67,6 @@ IpPacket * udpninja::RawSocket::read() {
 	}
 }
 
-unsigned int udpninja::RawSocket::getPort() {
+unsigned int RawSocket::getPort() {
 	return port;
 }

@@ -1,15 +1,9 @@
 #pragma once
 
+#include "IpPacket.h"
+
 namespace udpninja
 {
-
-struct IpPacket {
-	unsigned int len;
-	unsigned char * data;
-
-	IpPacket();
-	~IpPacket();
-};
 
 class RawSocket {
 public:
