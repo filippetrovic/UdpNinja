@@ -15,6 +15,7 @@ public:
 	int close();
 	int renameFile(char * newName, int openAgain);
 	int write(const void * data, size_t size);
+	int read(void * data, size_t size);
 private:
 	FILE * file;
 	char * fileName;

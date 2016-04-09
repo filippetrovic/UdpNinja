@@ -48,5 +48,25 @@ Job* JobBuilder::createReceiver() {
 Job* JobBuilder::createReplayJob() {
 	ReplaySender * replaySender = new ReplaySender();
 	
+	int mandatoryOptions = 2;	//	input file and receiver
+	
+	for (int i = 2 ; i < argc ; ++i) {
+		if (strcmp(argv[i], "-r") == 0) {
+			replaySender->setReceiver(argv[++i]);
+			mandatoryOptions--;
+		} else if (strcmp(argv[i], "-i") == 0) {
+			replaySender->setInputFilename(argv[++i]);
+			mandatoryOptions--;
+		} else {
+			delete replaySender;
+			return new HelpJob();
+		}
+	}
+
+	if (mandatoryOptions > 0) {
+		delete replaySender;
+		return new HelpJob();
+	}
+
 	return replaySender;
 }

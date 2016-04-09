@@ -12,6 +12,9 @@ File::File(char * fileName, const char * options) {
 	this->options = new char [strlen(options) + 1];
 	strcpy(this->options, options);
 	file = fopen(fileName, options);
+	if (file != NULL) {
+		fseek(file, 0L, SEEK_SET);
+	}
 }
 
 File::~File() {
@@ -30,6 +33,10 @@ int File::isOpen() {
 
 int File::write(const void * data, size_t size) {
 	return fwrite(data, size, 1, file) == 1;
+}
+
+int File::read(void * data, size_t size) {
+	return fread(data, size, 1, file) == 1;
 }
 
 void File::flush() {
