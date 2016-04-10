@@ -75,7 +75,10 @@ void Receiver::sayHello() {
 }
 
 void Receiver::setDir(char* dir) {
-	this->dir = dir;
+	delete this->dir;
+
+	this->dir = new char[strlen(dir) + 1];
+	strcpy(this->dir, dir);	
 }
 
 char* Receiver::getDir() {

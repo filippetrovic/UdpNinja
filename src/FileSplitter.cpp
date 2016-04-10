@@ -4,12 +4,19 @@
 using namespace udpninja;
 
 FileSplitter::FileSplitter(char * dir) {
-	tempFilename = new char [strlen(dir) + strlen(TMP_FILENAME) + 1];
-	strcpy(tempFilename, dir);
-	strncat(tempFilename, TMP_FILENAME, strlen(TMP_FILENAME));
+	// Does slash exists: /tmp/ or /tmp
+	int slashNotExists = dir[strlen(dir) - 1] != '/';
 	
-	outputDir = new char [strlen(dir) + 1];
+	outputDir = new char [strlen(dir) + 1 + slashNotExists];
 	strcpy(outputDir, dir);
+	if (slashNotExists) {
+		outputDir[strlen(outputDir)] = '/';
+		outputDir[strlen(outputDir) + 1] = '\0';
+	}
+
+	tempFilename = new char [strlen(outputDir) + strlen(TMP_FILENAME) + 1];
+	strcpy(tempFilename, outputDir);
+	strncat(tempFilename, TMP_FILENAME, strlen(TMP_FILENAME));
 
 	tmpFile = new File(tempFilename, FILE_MODE);
 	startTime = 0;
@@ -53,11 +60,11 @@ void FileSplitter::createNewFile(time_t timestamp) {
 	tm * timeInfo = localtime(&timestamp);
 	
 	timeInfo->tm_min = (timeInfo->tm_min / 5) * 5;
-	// filename format is: /udp_2016_03_27_12_55.ninja
-	const int fileNameLen = 28; // including terminal char
+	// filename format is: udp_2016_03_27_12_55.ninja
+	const int fileNameLen = 27; // including terminal char
 	char * fileName = new char[fileNameLen];
 	
-	strftime(fileName, fileNameLen, "/udp_%Y_%m_%d_%H_%M.ninja", timeInfo);
+	strftime(fileName, fileNameLen, "udp_%Y_%m_%d_%H_%M.ninja", timeInfo);
 	
 	char * fullFileName = new char [strlen(outputDir) + fileNameLen];
 	strcpy(fullFileName, outputDir);
@@ -74,8 +81,8 @@ void FileSplitter::createNewFile(time_t timestamp) {
 void FileSplitter::updateStartTime() {
 	time(&startTime);
 	tm * timeInfo = localtime(&startTime);
-	timeInfo->tm_min = (timeInfo->tm_min / 5) * 5; //	round to 5 min
-	timeInfo->tm_sec = 0;	//	round to 5 min
+	timeInfo->tm_min = (timeInfo->tm_min / 5) * 5; // round to 5 min
+	timeInfo->tm_sec = 0;	// round to 5 min
 	startTime = mktime(timeInfo);
 }
 char* FileSplitter::getOutputDir() {

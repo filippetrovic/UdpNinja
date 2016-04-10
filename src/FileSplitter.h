@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define FIVE_MIN 300
-#define TMP_FILENAME "/tmp.ninja"
+#define TMP_FILENAME "tmp.ninja"
 #define FILE_MODE "wb"
 
 namespace udpninja
