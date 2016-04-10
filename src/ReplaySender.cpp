@@ -12,11 +12,17 @@
 using namespace udpninja;
 
 ReplaySender::ReplaySender() {
+	outSocket = NULL;
+	inFile = NULL;
 }
 
 ReplaySender::~ReplaySender() {
-	delete outSocket;
-	delete inFile;
+	if (outSocket != NULL) {
+		delete outSocket;
+	}
+	if (inFile != NULL) {
+		delete inFile;
+	}
 }
 
 void ReplaySender::sayHello() {

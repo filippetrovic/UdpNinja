@@ -10,13 +10,22 @@ Receiver::Receiver() {
 	port = DEFAULT_PORT;
 	dir = new char[strlen(DEFAULT_OUTPUT_DIR) + 1];
 	strcpy(dir, DEFAULT_OUTPUT_DIR);
+
+	inSocket = NULL;
+	outputFile = NULL;
 }
 
 Receiver::~Receiver() {
 	delete dir;
-	delete inSocket;
-	outputFile->close();
-	delete outputFile;
+	
+	if (inSocket != NULL) {
+		delete inSocket;
+	}
+	
+	if (outputFile != NULL) {
+		outputFile->close();
+		delete outputFile;
+	}
 }
 
 void Receiver::doJob() {
