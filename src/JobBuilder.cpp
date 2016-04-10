@@ -17,6 +17,10 @@ JobBuilder::~JobBuilder() {
 }
 
 Job* JobBuilder::getJob() {
+	if (argc < 2) {
+		return new HelpJob();
+	}
+	
 	const char * mode = argv[1];
 
 	if (strcmp(mode, "-record") == 0) {
