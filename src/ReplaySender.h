@@ -25,7 +25,7 @@ private:
 	int prepare();
 	
 	char * receiverIp;
-	int receiverPort;
+	int receiverPort;	// In htons format
 	char * inputFile;
 	File * inFile;
 	RawSocketSender * outSocket;

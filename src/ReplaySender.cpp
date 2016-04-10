@@ -22,7 +22,7 @@ ReplaySender::~ReplaySender() {
 void ReplaySender::sayHello() {
 	std::cout << "UdpNinja started in replay mode. ";
 	std::cout << "Sending packets from \"" << inputFile << "\" to ";
-	std::cout << receiverIp << "/" << receiverPort << ".\n";
+	std::cout << receiverIp << "/" << ntohs(receiverPort) << ".\n";
 }
 
 void ReplaySender::doJob() {
@@ -33,6 +33,7 @@ void ReplaySender::doJob() {
 
 	IpPacket * packet = new IpPacket();
 	in_addr_t destinationIp = inet_addr(receiverIp);
+
 	while (1) {
 		
 		if (inFile->read(&(packet->len), sizeof(packet->len)) == 0) {
@@ -45,9 +46,9 @@ void ReplaySender::doJob() {
 		iphdr * ipHeader = (iphdr *) packet->data;
 		ipHeader->daddr = destinationIp;
 		
-		// TODO: set destionation port;
-		//udphdr * udpHeader = packet->data + sizeof(iphdr);
-		//udpHeader->dest = receiverPort;
+		udphdr * udpHeader = (udphdr *)(packet->data + sizeof(iphdr));
+		udpHeader->dest = receiverPort;
+		udpHeader->check = 0;	// TODO: Calculate udp header checksum.
 	
 		//std::cout << "src: " << inet_ntoa(*(struct in_addr*) &ipHeader->saddr);
 		//std::cout << " dst: " << inet_ntoa(*(struct in_addr*) &ipHeader->daddr);
@@ -96,7 +97,7 @@ void ReplaySender::setReceiver(char* receiver) {
 	strncpy(receiverIp, receiver, slashPosition);
 	receiverIp[slashPosition] = '\0';
 	
-	receiverPort = atoi(receiver + slashPosition + 1);
+	receiverPort = htons(atoi(receiver + slashPosition + 1));
 }
 
 char* ReplaySender::getInputFilename() {
