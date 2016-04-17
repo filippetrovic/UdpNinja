@@ -41,6 +41,9 @@ void HelpJob::sayHello() {
 	std::cout <<  "-i <file> \t Input file\n";
 	std::cout << SMALL_TAB << SMALL_TAB;
 	std::cout <<  "-r <ip/port> \t Receiver in format ip_address/port\n";
+	std::cout << SMALL_TAB << SMALL_TAB;
+	std::cout <<  "-c \t\t Set UDP header checksum to 0.\n";
+	std::cout << SMALL_TAB << SMALL_TAB << "\t\t " << "Use this if you care about performance.\n";
 
 	std::cout << "\n";
 }

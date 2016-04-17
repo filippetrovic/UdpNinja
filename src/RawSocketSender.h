@@ -16,7 +16,6 @@ public:
 	int send(IpPacket * packet);
 
 private:
-	uint16_t generateChecksum(void *buf, size_t hdr_len);
 	
 	int socketHandle;
 	sockaddr_in * dest;

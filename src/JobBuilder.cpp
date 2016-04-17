@@ -61,6 +61,8 @@ Job* JobBuilder::createReplayJob() {
 		} else if (strcmp(argv[i], "-i") == 0) {
 			replaySender->setInputFilename(argv[++i]);
 			mandatoryOptions--;
+		} else if (strcmp(argv[i], "-c") == 0) {
+			replaySender->setDontCalculateUdpCheckum(true);
 		} else {
 			delete replaySender;
 			return new HelpJob();

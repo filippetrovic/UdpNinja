@@ -1,7 +1,7 @@
 #include "RawSocketSender.h"
+#include "ChecksumCalculator.h"
 #include <sys/socket.h>
 #include <netinet/udp.h>
-#include <netinet/ip.h>
 #include <unistd.h>
 
 using namespace udpninja;
@@ -43,7 +43,7 @@ int RawSocketSender::send(IpPacket * packet) {
 	dest->sin_addr.s_addr = ipHeader->daddr;
 
 	ipHeader->check = 0;
-	ipHeader->check = generateChecksum(ipHeader, ipHeader->ihl * 4);
+	ipHeader->check = ChecksumCalculator::calculateChecksum(ipHeader, ipHeader->ihl * 4);
 	
 	int status = sendto(socketHandle, packet->data, packet->len, 0, (struct sockaddr *)dest, sizeof(sockaddr_in));
 //	if (status < 0) {
@@ -55,20 +55,4 @@ int RawSocketSender::send(IpPacket * packet) {
 //		}
 //	}
 	return status < 0;
-}
-
-uint16_t RawSocketSender::generateChecksum(void * buf, size_t hdr_len) {
-	unsigned long sum = 0;
-	uint16_t * ip1 = (uint16_t *) buf;
-	while (hdr_len > 1) {
-		sum += *ip1++;
-		if (sum & 0x80000000) {
-			sum = (sum & 0xFFFF) + (sum >> 16);
-		}
-		hdr_len -= 2;
-	}
-	while (sum >> 16)
-		sum = (sum & 0xFFFF) + (sum >> 16);
-
-	return ~sum;
 }

@@ -1,4 +1,5 @@
 #include "ReplaySender.h"
+#include "ChecksumCalculator.h"
 #include <iostream>
 #include "IpPacket.h"
 #include <netinet/ip.h>
@@ -14,6 +15,7 @@ using namespace udpninja;
 ReplaySender::ReplaySender() {
 	outSocket = NULL;
 	inFile = NULL;
+	dontCalculateUdpChecksum = false;
 }
 
 ReplaySender::~ReplaySender() {
@@ -54,7 +56,13 @@ void ReplaySender::doJob() {
 		
 		udphdr * udpHeader = (udphdr *)(packet->data + sizeof(iphdr));
 		udpHeader->dest = receiverPort;
-		udpHeader->check = 0;	// TODO: Calculate udp header checksum.
+		
+		if (dontCalculateUdpChecksum) {
+			udpHeader->check = 0;
+		} else {
+			udpHeader->check = ChecksumCalculator::calculateUdpChecksum(ipHeader);
+		}
+		
 	
 		//std::cout << "src: " << inet_ntoa(*(struct in_addr*) &ipHeader->saddr);
 		//std::cout << " dst: " << inet_ntoa(*(struct in_addr*) &ipHeader->daddr);
@@ -116,4 +124,8 @@ char* ReplaySender::getReceiverIp() {
 
 int ReplaySender::getReceiverPort() {
 	return receiverPort;
+}
+
+void ReplaySender::setDontCalculateUdpCheckum(bool flag) {
+	dontCalculateUdpChecksum = flag;
 }
