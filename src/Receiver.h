@@ -1,5 +1,5 @@
 #pragma once
-#include "RawSocket.h"
+#include "RawSocketReceiver.h"
 #include "IpPacket.h"
 #include "FileSplitter.h"
 #include "Job.h"
@@ -31,7 +31,7 @@ private:
 	unsigned int port;
 	char * dir;
 
-	RawSocket * inSocket;
+	RawSocketReceiver * inSocket;
 	FileSplitter * outputFile;
 };
 

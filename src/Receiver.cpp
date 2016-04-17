@@ -59,7 +59,7 @@ void Receiver::doJob() {
 
 int Receiver::prepare() {
 	
-	inSocket = new RawSocket(port);
+	inSocket = new RawSocketReceiver(port);
 
 	if (inSocket->open() < 0) {
 		std::cout << "Socket Error: Cannot open socket. Be sure you have root privileges\n";

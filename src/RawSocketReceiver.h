@@ -5,10 +5,10 @@
 namespace udpninja
 {
 
-class RawSocket {
+class RawSocketReceiver {
 public:
-	RawSocket(unsigned int port);
-	~RawSocket();
+	RawSocketReceiver(unsigned int port);
+	~RawSocketReceiver();
 	int open();
 	IpPacket * read();
 	unsigned int getPort();

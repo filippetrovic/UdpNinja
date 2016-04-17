@@ -1,4 +1,4 @@
-#include "RawSocket.h"
+#include "RawSocketReceiver.h"
 #include <sys/socket.h>
 #include <cstring>
 #include <unistd.h>
@@ -8,17 +8,17 @@
 
 using namespace udpninja;
 
-RawSocket::RawSocket(unsigned int port){
+RawSocketReceiver::RawSocketReceiver(unsigned int port){
 	this->port = port;
 	packet = new IpPacket();
 }
 
-RawSocket::~RawSocket(){
+RawSocketReceiver::~RawSocketReceiver(){
 	delete packet;
 	close(socketHandle);
 }
 
-int RawSocket::open() {
+int RawSocketReceiver::open() {
 	socketHandle = socket(AF_INET, SOCK_RAW, IPPROTO_UDP);
 	
 	if (socketHandle < 0) {
@@ -46,7 +46,7 @@ int RawSocket::open() {
 	return 0;
 }
 
-IpPacket * RawSocket::read() {
+IpPacket * RawSocketReceiver::read() {
 	while (1) {	//	wait for packet on defined port.
 		errno = 0;
 		packet->len = recv(socketHandle , packet->data , 65536 , 0);
@@ -67,6 +67,6 @@ IpPacket * RawSocket::read() {
 	}
 }
 
-unsigned int RawSocket::getPort() {
+unsigned int RawSocketReceiver::getPort() {
 	return port;
 }
