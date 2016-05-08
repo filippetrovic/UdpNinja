@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# Workspace files
+*.project
+
+# UdpNinja output files
+*.ninja
